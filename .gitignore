@@ -1,0 +1,5 @@
+target
+.idea
+*.rpmmacros
+/.ensime
+/.ensime_cache/
