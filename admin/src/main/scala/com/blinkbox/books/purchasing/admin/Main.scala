@@ -13,12 +13,13 @@ import spray.routing.HttpServiceActor
 import scala.concurrent.duration._
 
 object Main extends App with Configuration with Loggers with StrictLogging {
-  logger.info("App starting")
+  logger.info("App Starting")
   val system = ActorSystem("purchasing-admin-service")
   val service = system.actorOf(Props(classOf[AdminApiActor], new AdminApi), "purchasing-admin")
-  val interface = config.getString("admin.listen.address")
-  val port = config.getInt("admin.listen.port")
-  HttpServer(Http.Bind(service, interface = interface, port = port))(system, system.dispatcher, Timeout(10.seconds))
+  val appConfig = AppConfig(config)
+  val localUrl = appConfig.api.localUrl
+  HttpServer(Http.Bind(service, localUrl.getHost, localUrl.getPort))(system, system.dispatcher, Timeout(10.seconds))
+  logger.info("App Started")
 }
 
 class AdminApiActor(adminApi: AdminApi) extends HttpServiceActor {

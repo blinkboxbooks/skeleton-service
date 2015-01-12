@@ -9,17 +9,18 @@ import com.typesafe.scalalogging.StrictLogging
 import spray.can.Http
 import spray.http.Uri.Path
 import spray.routing.HttpServiceActor
+import com.blinkbox.books.spray.url2uri
 
 import scala.concurrent.duration._
 
 object Main extends App with Configuration with Loggers with StrictLogging {
-  logger.info("App starting")
+  logger.info("App Starting")
   val system = ActorSystem("purchasing-service")
-  val service = system.actorOf(Props(classOf[PublicApiActor], new PublicApi), "purchasing")
-  val interface = config.getString("public.listen.address")
-  val port = config.getInt("public.listen.port")
+  val service = system.actorOf(Props(classOf[PublicApiActor], new PublicApi), "purchasing-service")
+  val appConfig = AppConfig(config)
+  val localUrl = appConfig.api.localUrl
+  HttpServer(Http.Bind(service, localUrl.getHost, localUrl.getPort))(system, system.dispatcher, Timeout(10.seconds))
   logger.info("App Started")
-  HttpServer(Http.Bind(service, interface = interface, port = port)) (system, system.dispatcher, Timeout(10.seconds))
 }
 
 class PublicApiActor(publicApi: PublicApi) extends HttpServiceActor {
