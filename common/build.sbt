@@ -19,3 +19,5 @@ libraryDependencies ++= {
 }
 
 parallelExecution in Test := false
+
+rpmPrepSettings
