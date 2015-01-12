@@ -14,8 +14,8 @@ import scala.concurrent.duration._
 
 object Main extends App with Configuration with Loggers with StrictLogging {
   logger.info("App Starting")
-  val system = ActorSystem("purchasing-admin-service")
-  val service = system.actorOf(Props(classOf[AdminApiActor], new AdminApi), "purchasing-admin")
+  val system = ActorSystem("purchasing-service-admin")
+  val service = system.actorOf(Props(classOf[AdminApiActor], new AdminApi), "purchasing-service-admin")
   val appConfig = AppConfig(config)
   val localUrl = appConfig.api.localUrl
   HttpServer(Http.Bind(service, localUrl.getHost, localUrl.getPort))(system, system.dispatcher, Timeout(10.seconds))
