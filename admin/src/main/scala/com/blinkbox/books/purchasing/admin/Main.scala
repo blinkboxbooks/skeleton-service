@@ -14,9 +14,9 @@ import scala.concurrent.duration._
 
 object Main extends App with Configuration with Loggers with StrictLogging {
   logger.info("App Starting")
-  val system = ActorSystem("purchasing-service-admin")
-  val service = system.actorOf(Props(classOf[AdminApiActor], new AdminApi), "purchasing-service-admin")
   val appConfig = AppConfig(config)
+  val system = ActorSystem("purchasing-service", config)
+  val service = system.actorOf(Props(classOf[AdminApiActor], new AdminApi), "purchasing-service-admin")
   val localUrl = appConfig.api.localUrl
   HttpServer(Http.Bind(service, localUrl.getHost, localUrl.getPort))(system, system.dispatcher, Timeout(10.seconds))
   logger.info("App Started")
@@ -24,7 +24,7 @@ object Main extends App with Configuration with Loggers with StrictLogging {
 
 class AdminApiActor(adminApi: AdminApi) extends HttpServiceActor {
   val healthService = new HealthCheckHttpService {
-    override val basePath: Path = Path("/")
+    override val basePath: Path = Path("/health/ping")
     override implicit def actorRefFactory: ActorRefFactory = AdminApiActor.this.actorRefFactory
   }
   override def receive = runRoute(healthService.routes ~ adminApi.route)
