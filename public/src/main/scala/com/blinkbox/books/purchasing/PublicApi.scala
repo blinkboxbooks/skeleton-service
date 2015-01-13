@@ -5,7 +5,7 @@ import Directives._
 
 class PublicApi {
   val route = get {
-    path("purchasing" / "foo") {
+    path("my" / "purchasing" / "foo") {
       complete("bar")
     }
   }

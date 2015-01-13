@@ -1,1 +1,1 @@
-name := "purchasing-service"
+name := "purchasing-service-public"
