@@ -24,7 +24,7 @@ object Main extends App with Configuration with Loggers with StrictLogging {
 
 class AdminApiActor(adminApi: AdminApi) extends HttpServiceActor {
   val healthService = new HealthCheckHttpService {
-    override val basePath: Path = Path("/health/ping")
+    override val basePath: Path = Path("/")
     override implicit def actorRefFactory: ActorRefFactory = AdminApiActor.this.actorRefFactory
   }
   override def receive = runRoute(healthService.routes ~ adminApi.route)

@@ -25,7 +25,7 @@ object Main extends App with Configuration with Loggers with StrictLogging {
 
 class PublicApiActor(publicApi: PublicApi) extends HttpServiceActor {
   val healthService = new HealthCheckHttpService {
-    override val basePath: Path = Path("/health/ping")
+    override val basePath: Path = Path("/")
     override implicit def actorRefFactory: ActorRefFactory = PublicApiActor.this.actorRefFactory
   }
 
